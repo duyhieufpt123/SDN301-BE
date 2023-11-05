@@ -8,6 +8,9 @@ const bodyParser = require('body-parser');
 const bcrypt = require('bcryptjs');
 const mongoose = require('mongoose')
 const Role = require('./models/Role');
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger');
+
 
 const accountRouter = require('./routes/accountRoutes');
 const habitatRouter = require('./routes/habitatRoutes');
@@ -37,6 +40,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json());
 
+//Swagger route
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use('/api/accounts', accountRouter);
 app.use('/api/habitats', habitatRouter);
