@@ -3,24 +3,40 @@ const Ticket = require('../models/ticket');
 const getAllTickets = async (req, res) => {
   try {
     const tickets = await Ticket.find({}, '_id ticketName ticketPrice ticketType');
-    res.status(200).send(tickets);
+    const filteredTickets = tickets.map((ticket) => ({
+      ticketid: ticket._id,
+      ticketName: ticket.ticketName,
+      ticketPrice: ticket.ticketPrice,
+      ticketType: ticket.ticketType
+    }));
+
+    res.status(200).send(filteredTickets);
   } catch (error) {
-    res.status(500).send(error);
+    console.error('Get all tickets failed:', error);
+    res.status(500).send('Something went wrong with get all tickets');
   }
 };
 
 const getTicketById = async (req, res) => {
-    const ticketid = req.params.id;
+  const ticketid = req.params.id;
   try {
-    const ticket = await Ticket.findById(ticketid, 'ticketid ticketName ticketPrice ticketType');
+    const ticket = await Ticket.findById(ticketid, '_id ticketName ticketPrice ticketType');
     if (!ticket) {
       return res.status(404).send({error: 'Ticket Not Found'});
     }
-    res.send(ticket);
+    const filteredTicket = {
+      ticketid: ticket._id,
+      ticketName: ticket.ticketName,
+      ticketPrice: ticket.ticketPrice,
+      ticketType: ticket.ticketType
+    };
+    res.status(200).send(filteredTicket);
   } catch (error) {
+    console.error('Error get ticket by ID:', error);
     res.status(500).send(error);
   }
 };
+
 
 const createTicket = async (req, res) => {
   try {

@@ -13,11 +13,9 @@ const createOrder = async (req, res) => {
         if (!ticket) {
           return res.status(404).send({ message: "Ticket not found with id: " + item.ticket });
         }
-        // Change this line from ticket.price to ticket.ticketPrice
         if (typeof ticket.ticketPrice !== 'number') {
           return res.status(400).send({ message: "Invalid price for ticket with id: " + item.ticket });
         }
-        // And this line as well
         totalPrice += ticket.ticketPrice * item.quantity;
         totalQuantity += item.quantity;
       }
@@ -109,7 +107,7 @@ const getOrderById = async (req, res) => {
       res.send(filteredOrders);
     } catch (error) {
       console.error('Get all orders fail:', error);
-      res.status(500).send('Something Wrong with this thing :)');
+      res.status(500).send('Something wrong with this thing :)');
     }
   };
   
