@@ -15,7 +15,7 @@ const getAllHabitats = async (req, res) => {
       res.status(200).send(filteredHabitats);
     } catch (error) {
       console.error('Get all habitats failed:', error);
-      res.status(500).send('Something went wrong with get all habitats');
+      res.status(500).send(error);
     }
   };
   

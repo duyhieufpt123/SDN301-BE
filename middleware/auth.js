@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const Account = require('../models/Account');
 const Role = require('../models/Role');
 
-// authenticate with token provided when register
+// token sẽ được lưu trong db rồi lấy cái token đấy để làm việc
 const auth = async (req, res, next) => {
   try {
     const token = req.header('Authorization').replace('Bearer ', '');

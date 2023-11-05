@@ -107,7 +107,7 @@ const getOrderById = async (req, res) => {
       res.send(filteredOrders);
     } catch (error) {
       console.error('Get all orders fail:', error);
-      res.status(500).send('Something wrong with this thing :)');
+      res.status(500).send(error);
     }
   };
   

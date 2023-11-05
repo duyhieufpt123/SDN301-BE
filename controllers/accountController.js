@@ -65,9 +65,6 @@ const getProfile = async (req, res) => {
   }
 };
 
-
-
-
 const updateProfile = async (req, res) => {
   const updates = Object.keys(req.body);
   const allowedUpdates = ['firstName', 'lastName', 'password'];
