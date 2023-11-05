@@ -9,6 +9,11 @@ const generateAuthToken = async (user) => {
 
 const register = async (req, res) => {
   try {
+    const existingAccount = await Account.findOne({ username: req.body.username });
+    if (existingAccount) {
+      return res.status(409).send({ error: 'Username already exist with another account.' });
+    }
+
     const defaultRole = await Role.findOne({ name: 'guest' });
     if (!defaultRole) {
       throw new Error('Default role not found.');
