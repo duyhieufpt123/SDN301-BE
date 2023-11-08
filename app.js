@@ -53,7 +53,7 @@ app.use('/api/animals', animalRouter)
 
 //Accept CrossOrigin
 const corsOpts = {
-  origin: '*',
+  origin: 'http://localhost:5000/',
 
   methods: [
     'GET',
