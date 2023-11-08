@@ -7,7 +7,6 @@ const router = express.Router();
 router.post('/register', accountController.register);
 router.post('/login', accountController.login);
 
-router.post('/forgot-password', accountController.forgotPassword);
 
 
 // cái nào có auth nghĩa là cái đó cần token 
