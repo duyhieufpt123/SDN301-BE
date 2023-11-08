@@ -10,6 +10,8 @@ const mongoose = require('mongoose')
 const Role = require('./models/Role');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger');
+var cors = require('cors');
+
 
 
 const accountRouter = require('./routes/accountRoutes');
@@ -48,6 +50,24 @@ app.use('/api/habitats', habitatRouter);
 app.use('/api/tickets', ticketRouter);
 app.use('/api/orders', orderRouter)
 app.use('/api/animals', animalRouter)
+
+//Accept CrossOrigin
+const corsOpts = {
+  origin: '*',
+
+  methods: [
+    'GET',
+    'POST',
+    'PUT',
+    'DELETE'
+  ],
+
+  allowedHeaders: [
+    'Content-Type',
+  ],
+};
+app.use(cors(corsOpts));
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
