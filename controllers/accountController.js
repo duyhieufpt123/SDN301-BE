@@ -103,6 +103,7 @@ const getProfile = async (req, res) => {
       accountid: accountData._id,
       firstName: accountData.firstName,
       lastName: accountData.lastName,
+      email: accountData.email,
       dateOfBirth: accountData.dateOfBirth,
       username: accountData.username,
       roleName: accountData.roleId ? accountData.roleId.name : undefined
@@ -117,7 +118,7 @@ const getProfile = async (req, res) => {
 
 const updateProfile = async (req, res) => {
   const updates = Object.keys(req.body);
-  const allowedUpdates = ['firstName', 'lastName', 'password'];
+  const allowedUpdates = ['firstName', 'lastName', 'email', 'password'];
   const isValidOperation = updates.every((update) => allowedUpdates.includes(update));
 
   if (!isValidOperation) {
@@ -140,7 +141,7 @@ const getAllAccounts = async (req, res) => {
   try {
     const accounts = await Account.find({})
       .populate('roleId', 'name -_id')
-      .select('_id firstName lastName dateOfBirth username tokens');
+      .select('_id firstName lastName email dateOfBirth username tokens');
 
     const formattedAccounts = accounts.map(account => {
       const accountObj = account.toObject();
@@ -148,6 +149,7 @@ const getAllAccounts = async (req, res) => {
         accountId: accountObj._id,
         firstName: accountObj.firstName,
         lastName: accountObj.lastName,
+        email: accountObj.email,
         dateOfBirth: accountObj.dateOfBirth,
         username: accountObj.username,
         tokens: accountObj.tokens,
