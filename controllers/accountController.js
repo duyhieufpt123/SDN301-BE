@@ -2,6 +2,9 @@ const Account = require('../models/Account');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const Role = require('../models/Role');
+const sendEmail = require('../utils/mailer');
+const crypto = require('crypto');
+
 
 const generateAuthToken = async (user) => {
   return jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET);
@@ -27,9 +30,10 @@ const register = async (req, res) => {
     const token = await generateAuthToken(account);
     account.tokens = token;
     await account.save();
-    res.status(201).send({ account});
+    res.status(201).send({ account });
   } catch (error) {
-    res.status(400).send(error);
+    console.error('Error during password reset request:', error.stack);
+    res.status(500).send({ error: 'There was an error processing your request.' });
   }
 };
 
@@ -42,10 +46,51 @@ const login = async (req, res) => {
     if (!account) {
       return res.status(401).send({ error: 'Login failed!' });
     }
-    res.send({ account});
+    res.send({ account });
   } catch (error) {
     res.status(400).send(error);
   }
+};
+
+const requestPasswordReset = async (req, res) => {
+  try {
+    const account = await Account.findOne({ username: req.body.username });
+    if (!account) {
+      return res.status(404).send({ error: 'User not found.' });
+    }
+
+    const resetToken = account.createPasswordResetToken();
+    await account.save({ validateBeforeSave: false });
+
+    const resetURL = `${req.protocol}://${req.get('host')}/api/accounts/resetPassword/${resetToken}`;
+    await sendEmail(account._id, 'Password Reset', `Please reset your password by clicking the following link: ${resetURL}`);
+
+
+    res.status(200).send({ message: 'Password reset email sent.' });
+  } catch (error) {
+    console.error('Error during password reset request:', error);
+    res.status(500).send({ error: 'There was an error processing your request.' });
+  }
+};
+
+const resetPassword = async (req, res) => {
+  const hashedToken = crypto.createHash('sha256').update(req.params.token).digest('hex');
+
+  const account = await Account.findOne({
+    passwordResetToken: hashedToken,
+    passwordResetExpires: { $gt: Date.now() },
+  });
+
+  if (!account) {
+    return res.status(400).send({ error: 'Token is invalid or has expired.' });
+  }
+
+  account.password = req.body.password;
+  account.passwordResetToken = undefined;
+  account.passwordResetExpires = undefined;
+  await account.save();
+
+  res.status(200).send({ message: 'Your password has been reset.' });
 };
 
 const getProfile = async (req, res) => {
@@ -94,8 +139,8 @@ const updateProfile = async (req, res) => {
 const getAllAccounts = async (req, res) => {
   try {
     const accounts = await Account.find({})
-      .populate('roleId', 'name -_id') 
-      .select('_id firstName lastName dateOfBirth username tokens'); 
+      .populate('roleId', 'name -_id')
+      .select('_id firstName lastName dateOfBirth username tokens');
 
     const formattedAccounts = accounts.map(account => {
       const accountObj = account.toObject();
@@ -138,7 +183,9 @@ module.exports = {
   getProfile,
   updateProfile,
   getAllAccounts,
-  deleteAccount
+  deleteAccount,
+  requestPasswordReset,
+  resetPassword
 };
 
 

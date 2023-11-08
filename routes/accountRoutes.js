@@ -7,7 +7,9 @@ const router = express.Router();
 router.post('/register', accountController.register);
 router.post('/login', accountController.login);
 
-
+//route reset password
+router.post('/requestPasswordReset', accountController.requestPasswordReset);
+router.post('/resetPassword/:token', accountController.resetPassword);
 
 // cái nào có auth nghĩa là cái đó cần token 
 router.get('/profile', auth, accountController.getProfile);

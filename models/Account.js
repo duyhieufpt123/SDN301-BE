@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
 
 const accountSchema = new mongoose.Schema({
   firstName: {
@@ -22,10 +23,22 @@ const accountSchema = new mongoose.Schema({
     unique: true,
     trim: true
   },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    trim: true,
+    lowercase: true
+  },
+
   password: {
     type: String,
     required: true
   },
+
+  passwordResetToken: String,
+  passwordResetExpires: Date,
+
   roleId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Role'
@@ -63,6 +76,19 @@ accountSchema.statics.findByCredentials = async function(username, password) {
     throw new Error('Unable to login. Password incorrect.');
   }
   return account;
+};
+
+// Ham password reset
+accountSchema.methods.createPasswordResetToken = function () {
+  const resetToken = crypto.randomBytes(32).toString('hex');
+  this.passwordResetToken = crypto
+    .createHash('sha256')
+    .update(resetToken)
+    .digest('hex');
+     // Token het han trong 10p
+  this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
+
+  return resetToken;
 };
 
 

@@ -42,16 +42,6 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json());
 
-//Accept Cors
-app.use(cors());
-
-const corsOptions = {
-  origin: 'http://localhost:3000', 
-  methods: 'GET,HEAD,PUT,POST,DELETE',
-  credentials: true, 
-};
-app.use(cors(corsOptions));
-
 
 //Swagger route
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
@@ -61,6 +51,16 @@ app.use('/api/habitats', habitatRouter);
 app.use('/api/tickets', ticketRouter);
 app.use('/api/orders', orderRouter)
 app.use('/api/animals', animalRouter)
+
+//Accept Cors
+app.use(cors());
+
+const corsOptions = {
+  origin: 'http://localhost:3000', 
+  methods: 'GET,HEAD,PUT,POST,DELETE',
+  credentials: true, 
+};
+app.use(cors(corsOptions));
 
 
 // catch 404 and forward to error handler
