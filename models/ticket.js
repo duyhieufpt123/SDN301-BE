@@ -9,7 +9,13 @@ const ticketSchema = new mongoose.Schema({
   },
   ticketPrice: {
     type: Number,
-    required: true
+    required: true,
+    validate: {
+      validator: function (value) {
+        return value >= 1;
+      },
+      message: 'ticket price cannot be negative.',
+    },
   },
   ticketType: {
     type: String,

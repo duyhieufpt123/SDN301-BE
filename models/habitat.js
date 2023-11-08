@@ -13,13 +13,19 @@ const habitatSchema = new mongoose.Schema({
   habitatSize: {
     type: Number,
     required: true,
+    validate: {
+      validator: function (value) {
+        return value >= 1;
+      },
+      message: 'Habitat size cannot be negative.',
+    },
   },
   condition: {
     type: String,
     required: true,
   },
 }, {
-  timestamps: true
+  timestamps: true,
 });
 
 const Habitat = mongoose.model('Habitat', habitatSchema);
