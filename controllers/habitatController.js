@@ -42,19 +42,20 @@ const getAllHabitats = async (req, res) => {
     }
   };
   
-const createHabitat = async (req, res) => {
-  const habitat = new Habitat(req.body);
-  try {
-    const duplicateHabitat = await Habitat.findOne({ name: req.body.name });
-    if (duplicateHabitat) {
-      return res.status(409).send({ message: 'A habitat with this name already exists.' });
+  const createHabitat = async (req, res) => {
+    try {
+      const duplicateHabitat = await Habitat.findOne({ habitatName: req.body.name });
+      if (duplicateHabitat) {
+        return res.status(409).send({ error: 'A habitat with this name already exists.' });
+      }
+      const habitat = new Habitat(req.body);
+      await habitat.save();
+      res.status(201).send(habitat);
+    } catch (error) {
+      res.status(400).send(error);
     }
-    await habitat.save();
-    res.status(201).send(habitat);
-  } catch (error) {
-    res.status(400).send(error);
-  }
-};
+  };
+  
 
 const updateHabitat = async (req, res) => {
   const updates = Object.keys(req.body);
