@@ -88,21 +88,19 @@ const getOrderById = async (req, res) => {
         orderid: order._id,
         totalOrderPrice: order.totalPrice,
         orderQuantity: order.quantity,
-        account: order.account
-          ? {
-              accountid: order.account._id,
-              firstName: order.account.firstName,
-              lastName: order.account.lastName,
-              dateOfBirth: order.account.dateOfBirth,
-              username: order.account.username,
-            }
-          : null, 
+        account:{
+          accountid: order.account._id,
+          firstName: order.account.firstName,
+          lastName: order.account.lastName,
+          dateOfBirth: order.account.dateOfBirth,
+          username: order.account.username,
+        },
         tickets: order.tickets.map((t) => ({
-          ticketid: t.ticket._id,
-          ticketName: t.ticket.ticketName,
-          ticketPrice: t.ticket.ticketPrice,
-          ticketType: t.ticket.ticketType,
-          ticketQuantity: t.quantity,
+            ticketid: t.ticket._id,
+            ticketName: t.ticket.ticketName,
+            ticketPrice: t.ticket.ticketPrice,
+            ticketType: t.ticket.ticketType,
+            ticketQuantity: t.quantity,
         })),
       }));
   
