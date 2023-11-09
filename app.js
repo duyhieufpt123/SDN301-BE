@@ -53,14 +53,9 @@ app.use('/api/orders', orderRouter)
 app.use('/api/animals', animalRouter)
 
 //Accept Cors
-app.use(cors());
+app.use(cors({credentials: true, origin: "*", exposedHeaders: '*'}));
 
-const corsOptions = {
-  origin: 'http://localhost:3000', 
-  methods: 'GET,HEAD,PUT,POST,DELETE',
-  credentials: true, 
-};
-app.use(cors(corsOptions));
+
 
 
 // catch 404 and forward to error handler
