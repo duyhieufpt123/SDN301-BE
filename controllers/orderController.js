@@ -22,7 +22,7 @@ const createOrder = async (req, res) => {
       
   
       if (isNaN(totalPrice)) {
-        return res.status(400).send({ message: "Fail to caculate total price" });
+        return res.status(400).send({ message: "Fail to calculate total price" });
       }
   
       const order = new Order({

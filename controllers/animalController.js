@@ -4,21 +4,13 @@ const Habitat = require('../models/habitat');
 const multer = require('multer');
 const fs = require('fs')
 
-const findById = async (req) => {
-  const id = req.query.id
+const uploadAnimalImage = async (req, res) => {
+  try {
+    res.send("ok");
+  } catch (err) {
+    res.send(err);
+  }
 }
-
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'uploads/');
-  },
-  filename: function (req, file, cb) {
-    cb(null, "animal_" + findById + ".jpg");
-  },
-});
-
-const upload = multer({ storage });
-
 
 const createAnimal = async (req, res) => {
   try {
@@ -32,8 +24,7 @@ const createAnimal = async (req, res) => {
     }
 
     const animal = new Animal({
-      ...req.body,
-      animalImage: req.file ? req.file.path : undefined,
+      ...req.body
     });
 
     await animal.save();
@@ -174,5 +165,6 @@ module.exports = {
   getAllAnimals,
   getAnimalById,
   deleteAnimal,
-  viewImage
+  viewImage,
+  uploadAnimalImage
 };
